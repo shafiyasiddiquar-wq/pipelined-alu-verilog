@@ -1,0 +1,53 @@
+module tb;
+
+reg clk, reset;
+reg [2:0] opcode;
+reg [7:0] A, B;
+wire [7:0] result;
+
+pipelined_alu uut (
+    .clk(clk),
+    .reset(reset),
+    .opcode(opcode),
+    .A(A),
+    .B(B),
+    .result(result)
+);
+
+
+always #5 clk = ~clk;
+
+
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb);
+end
+
+initial begin
+    clk = 0;
+    reset = 1;
+
+    #10 reset = 0;
+
+    // ADD
+    #10 opcode = 3'b000; A = 10; B = 5;
+
+    // SUB
+    #10 opcode = 3'b001; A = 20; B = 8;
+
+    // AND
+    #10 opcode = 3'b010; A = 15; B = 9;
+
+    // OR
+    #10 opcode = 3'b011; A = 12; B = 3;
+
+    // XOR
+    #10 opcode = 3'b100; A = 7; B = 2;
+
+    // MUL
+    #10 opcode = 3'b101; A = 4; B = 3;
+
+    #100 $finish;
+end
+
+endmodule
